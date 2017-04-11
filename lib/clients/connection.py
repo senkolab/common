@@ -19,6 +19,7 @@ class connection(object):
     def connect(self):
         from labrad.wrappers import connectAsync
         self.cxn = yield connectAsync(name=self.name)
+        yield self.cxn.refresh()
         yield self.setupListeners()
         returnValue(self)
     
@@ -72,9 +73,9 @@ class connection(object):
     def followServerConnect(self, cntx, server_name):
         print 'server connected'
         server_name = server_name[1]
-        print server_name
         if server_name in self._servers.keys():
             print '{} Connected'.format(server_name)
+            yield self.cxn.refresh()
             self._servers[server_name] = yield self.cxn[server_name]
             actions = self._on_connect[server_name]
             for action in actions:
