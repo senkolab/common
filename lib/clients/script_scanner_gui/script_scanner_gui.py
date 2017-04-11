@@ -75,8 +75,10 @@ class script_scanner_gui(QtGui.QWidget):
             self.ParametersEditor.setEnabled(True)
 
     @inlineCallbacks
-    def populateExperiments(self):
+    def populateExperiments(self, reload_scripts=False):
         sc = yield self.cxn.get_server('ScriptScanner')
+        if reload_scripts:
+            yield sc.reload_scripts()
         available = yield sc.get_available_scripts(context=self.context)
         queued = yield sc.get_queue(context=self.context)
         running = yield sc.get_running(context=self.context)

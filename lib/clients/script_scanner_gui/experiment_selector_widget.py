@@ -337,7 +337,7 @@ class experiment_selector_widget(QtGui.QWidget):
                               start, stop, steps, units)
 
     def on_refresh_button(self):
-        self.parent.parent.populateExperiments()
+        self.parent.parent.populateExperiments(reload_scripts=True)
 
 
 
@@ -351,6 +351,8 @@ class experiment_selector_widget(QtGui.QWidget):
         self.on_run.emit(self.dropdown.currentText())
 
     def addExperiment(self, experiment):
-        self.dropdown.addItem(experiment)
-        self.dropdown.model().sort(0)
-        self.experiments.append(experiment)
+        all_items = [self.dropdown.itemText(i) for i in range(self.dropdown.count())]
+        if experiment not in all_items:
+            self.dropdown.addItem(experiment)
+            self.dropdown.model().sort(0)
+            self.experiments.append(experiment)
