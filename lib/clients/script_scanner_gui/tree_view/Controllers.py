@@ -32,6 +32,7 @@ class ParametersEditor(base, form):
         self._parameter = {}
 
     def add_collection_node(self, name):
+        self.category_select.addItem(name)
         node = self._model.insert_collection(name)
         self._collection[name] = node
 
