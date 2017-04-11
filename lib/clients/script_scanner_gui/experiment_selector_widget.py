@@ -287,6 +287,7 @@ class experiment_selector_widget(QtGui.QWidget):
         self.repeat_button.pressed.connect(self.on_repeat_button)
         self.schedule_button.pressed.connect(self.on_schedule_button)
         self.scan_button.pressed.connect(self.on_scan_button)
+        self.refresh_button.pressed.connect(self.on_refresh_button)
         self.dropdown.currentIndexChanged[QtCore.QString].connect(self.on_experiment_selected)
         self.dropdown.currentIndexChanged[QtCore.QString].connect(self.check_button_disable)
 
@@ -334,6 +335,11 @@ class experiment_selector_widget(QtGui.QWidget):
             units = dialog.uiStart.suffix()
             self.on_scan.emit(scan, measure, parameter,
                               start, stop, steps, units)
+
+    def on_refresh_button(self):
+        self.parent.parent.populateExperiments()
+
+
 
     def run_emit_selected(self):
         """
