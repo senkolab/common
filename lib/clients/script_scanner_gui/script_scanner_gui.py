@@ -95,12 +95,16 @@ class script_scanner_gui(QtGui.QWidget):
         pv = yield self.cxn.get_server('ParameterVault')
         collections = yield pv.get_collections(context=self.context)
         for collection in collections:
-            self.ParametersEditor.add_collection_node(collection)
-            parameters = yield pv.get_parameter_names(collection)
-            for param_name in parameters:
-                value = yield pv.get_parameter(collection, param_name, False)
-                self.ParametersEditor.add_parameter(collection,
-                                                    param_name, value)
+            try:
+                self.ParametersEditor.add_collection_node(collection)
+                parameters = yield pv.get_parameter_names(collection)
+                for param_name in parameters:
+                    value = yield pv.get_parameter(collection, param_name, False)
+                    self.ParametersEditor.add_parameter(collection,
+                                                        param_name, value)
+            except Exception as e:
+                print("Could not pull parameter: " + str(param_name))
+
 
     @inlineCallbacks
     def setupListenersScriptScanner(self):
