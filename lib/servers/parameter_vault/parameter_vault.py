@@ -52,7 +52,7 @@ class ParameterVault(LabradServer):
 
     @inlineCallbacks
     def _addParametersInDirectory(self, topPath, subPath):
-        yield self.client.registry.cd(topPath + subPath)
+        yield self.client.registry.cd(topPath + subPath, True)
         directories, parameters = yield self.client.registry.dir()
         if subPath:  # ignore parameters in the top level
             for parameter in parameters:
