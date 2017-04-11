@@ -202,6 +202,17 @@ class ParameterVault(LabradServer):
         """Discards current parameters and reloads them from registry"""
         yield self.load_parameters()
 
+    @setting(7, "add_parameter", collection='s', parameter_name='s', value='v', range='v')
+    def add_parameter(self, c, collection, parameter_name, value, range):
+        """add parameter type parameter to the the 'ParameterVault
+           takes collection name, parameter name, value and range
+        '"""
+        regDir = self.registryDirectory
+        fullDir = regDir + [collection]
+        yield self.client.registry.cd(fullDir, True)
+        yield self.client.registry.set(parameter_name, value)
+        yield self.load_parameters()
+
     @inlineCallbacks
     def stopServer(self):
         try:
