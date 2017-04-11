@@ -209,8 +209,52 @@ class ParameterVault(LabradServer):
         '"""
         regDir = self.registryDirectory
         fullDir = regDir + [collection]
+        min_val = value - range/2.0
+        max_val = value + range/2.0
+        parameter = [min_val, max_val, value]
         yield self.client.registry.cd(fullDir, True)
-        yield self.client.registry.set(parameter_name, value)
+        yield self.client.registry.set(parameter_name, ('parameter', parameter))
+        yield self.load_parameters()
+
+    @setting(8, "add_scan", collection='s', parameter_name='s', value='v', range='v')
+    def add_scan(self, c, collection, parameter_name, value, range):
+        """add parameter type parameter to the the 'ParameterVault
+           takes collection name, parameter name, value and range
+        '"""
+        regDir = self.registryDirectory
+        fullDir = regDir + [collection]
+        min_val = value - range/2.0
+        max_val = value + range/2.0
+        init_min = value - range/4.0
+        init_max = value + range/4.0
+        init_steps = 10
+        parameter = ([min_val, max_val], (init_min, init_max, init_steps))
+        yield self.client.registry.cd(fullDir, True)
+        yield self.client.registry.set(parameter_name, ('scan', parameter))
+        yield self.load_parameters()
+
+    @setting(9, "add_selection_simple", collection='s', parameter_name='s', value='*s')
+    def add_selection_simple(self, c, collection, parameter_name, value, range):
+        """add parameter type parameter to the the 'ParameterVault
+           takes collection name, parameter list
+        '"""
+        regDir = self.registryDirectory
+        fullDir = regDir + [collection]
+        parameter = (value[0], value)
+        yield self.client.registry.cd(fullDir, True)
+        yield self.client.registry.set(parameter_name, ('selection_simple', parameter))
+        yield self.load_parameters()
+
+    @setting(10, "remove", collection='s', parameter_name='s')
+    def remove(self, c, collection, parameter_name):
+        """removes parameter of any type from the 'ParameterVault'
+           takes collection and parameter name
+        """
+        regDir = self.registryDirectory
+        fullDir = regDir + [collection]
+        yield self.client.registry.cd(fullDir)
+        yield self.client.registry.del_(parameter_name)
+        self.parameters.pop((collection, parameter_name))
         yield self.load_parameters()
 
     @inlineCallbacks
