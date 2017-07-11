@@ -7,7 +7,7 @@ description =
 instancename = Multiplexer Server
 
 [startup]
-cmdline = %PYTHON% %FILE%self.wmdll.SetPIDCourseNum
+cmdline = %PYTHON% %FILE%
 timeout = 20
 
 [shutdown]
